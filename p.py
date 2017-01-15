@@ -8,6 +8,10 @@ characters = [ \
             ]
 
 def forward(x, key):
+    """
+    This function uses the key array to decrypt password x
+    """
+
     j = 0
     for i in range(len(x)):
 
@@ -20,14 +24,16 @@ def forward(x, key):
         if x[i] >= len(characters):
             x[i] -= len(characters)
 
-    str = ""
+    str_arr = [str(characters[char]) for char in x]
+    st = "".join(str_arr)
 
-    for char in x:
-        str += characters[char]
-
-    return str
+    return st
 
 def backward(x, key):
+    """
+    This function uses the key array to encrypt password x
+    """
+
     out = []
     j = 0
     for i in range(len(x)):
@@ -42,59 +48,57 @@ def backward(x, key):
             out[i] += len(characters)
     return out
 
-update = False
+update = False # Flag for updating existing entry
 data = {}
 
+# Check if the passwords file exists and open it
 if os.path.exists("p.txt"):
     with open("p.txt" , encoding="utf-8") as file:
         data = json.load(file)
 else:
     update = True
 
-in1 = input().strip()
+in1 = input().strip() # Read first input
+
+# If the first input is 'view', display all account names stored
 if in1 == "view":
     print("\nnames:")
     for key in data.keys():
-        name = ""
-        x = key.split()
-        for i in x:
-            name += characters[int(i)]
-        print(name)
+        name = [characters[int(i)] for i in key.split()]
+        print("".join(name))
     print()
     exit()
 
-in2 = input().strip()
+in2 = input().strip() # Read second input
+
+# If the second input is 'update',
 if in2 == "update":
     update = True
     in2 = input().strip()
 in3 = []
 
-if len(in2) != 4:
-    exit()
-
-for i in range(4):
+# Slightly modify the PIN
+for i in range(len(in2)):
     if int(in2[i]) < len(in1):
         in3.append( int(in2[i]) + characters.index(in1[int(in2[i])]) )
-
     else:
         in3.append( int(in2[i]) + characters.index(in1[ int(in2[i]) % len(in1) ]) )
 
-key = str(characters.index(in1[0]))
-for i in range(1, len(in1)):
-    key += " "
-    key += str(characters.index(in1[i]))
+# Convert account name to key for comparison
+key_arr = [str(characters.index(i)) for i in in1]
+key = " ".join(key_arr)
 
+# Print details if key exists and is not for update
 if not update and key in data:
-
-    print("\n" + forward(data[key][0], in3))
-    print(forward(data[key][1], in3), "\n")
+    print("\n" + forward(data[key][0], in3) + "\n" + forward(data[key][1], in3) + "\n")
 
 else:
 
-    in6 = input().strip()
-    in4 = input().strip()
-    in5 = input().strip()
+    in6 = input().strip() # Prompt username
+    in4 = input().strip() # Prompt password
+    in5 = input().strip() # Prompt password confirmation
 
+    # Check if the two passwords match
     if in4 != in5:
         exit()
 
