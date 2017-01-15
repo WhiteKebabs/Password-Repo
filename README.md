@@ -4,7 +4,7 @@
 This program is nowhere near as secure as authentic services. Please use at your own risk.
 
 ### Program Details
-Password Repo saves all your account details in a json file. All entries are semi-securely encrpyted using a PIN of your choice which you will be entering at the beginning.
+Password Repo saves all your account details in a json file. All entries are semi-securely encrpyted using a PIN of your choice which you will enter at the beginning of commands 1-3.
 
 ### Usage 1: Account Retrieval
 ```
